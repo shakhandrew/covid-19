@@ -1,0 +1,16 @@
+spring:
+  main:
+    banner-mode: "off"
+
+logging:
+  pattern:
+    console:
+  file:
+    name: log.log
+
+api:
+  covid19:
+    client:
+      uri: https://covid-api.mmediagroup.fr/v1
+      connect-timeout: 60s
+      read-timeout: 60s
