@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.shakh.covid19.client.error.Covid19DataNotFound;
 
 import java.io.IOException;
 
@@ -27,6 +28,10 @@ public class CasesJsonDeserializer extends JsonDeserializer<CasesResponse> {
         log.debug("Object for deserialization {}.", node);
 
         JsonNode allJsonNode = node.get(ALL);
+
+        if (allJsonNode == null) {
+            throw new Covid19DataNotFound("Can't deserialize object. Data not found.");
+        }
 
         var casesResponse = CasesResponse.builder()
                 .confirmed(allJsonNode.get("confirmed").asLong())

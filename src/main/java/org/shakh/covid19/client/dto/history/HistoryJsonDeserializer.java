@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.shakh.covid19.client.error.Covid19DataNotFound;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -32,6 +33,11 @@ public class HistoryJsonDeserializer extends JsonDeserializer<HistoryResponse> {
         log.debug("Object for deserialization {}.", node);
 
         JsonNode allJsonNode = node.get(ALL);
+
+        if (allJsonNode == null) {
+            throw new Covid19DataNotFound("Can't deserialize object. Data not found.");
+        }
+
         Map<LocalDate, Long> dates =
                 objectMapper.convertValue(allJsonNode.get("dates"), new TypeReference<>() {});
         var historyResponse = new HistoryResponse(dates);

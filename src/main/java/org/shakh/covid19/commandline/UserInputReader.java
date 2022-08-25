@@ -2,6 +2,7 @@ package org.shakh.covid19.commandline;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.shakh.covid19.client.error.Covid19DataNotFound;
 import org.shakh.covid19.commandline.dto.Command;
 import org.shakh.covid19.commandline.util.ConsoleTemplate;
 import org.shakh.covid19.service.CountryCovid19InfoService;
@@ -20,7 +21,7 @@ public class UserInputReader implements CommandLineRunner {
     private final static String ENTER_COUNTRY = "Enter country name:";
 
     @Override
-    public void run(String... args) {
+    public void run(final String... args) {
         Scanner sc = new Scanner(System.in);
         String input;
         do {
@@ -28,12 +29,18 @@ public class UserInputReader implements CommandLineRunner {
             input = sc.nextLine();
 
             log.debug("The name of the country ({}) is entered.", input);
-            CountryCovid19InfoDto covidInfo = countryCovidInfoService.getCovid19Info(input);
 
-            if (covidInfo != null) {
-                String resultCovidInfo = ConsoleTemplate.getCovid19InfoForCountry(covidInfo);
-                log.debug("Received information about covid19. {}", resultCovidInfo);
-                System.out.println(resultCovidInfo);
+            try {
+                CountryCovid19InfoDto covidInfo = countryCovidInfoService.getCovid19Info(input);
+                if (covidInfo != null) {
+                    String resultCovidInfo = ConsoleTemplate.getCovid19InfoForCountry(covidInfo);
+                    log.debug("Received information about covid19. {}", resultCovidInfo);
+                    System.out.println(resultCovidInfo);
+                }
+            } catch (Covid19DataNotFound exception) {
+                System.out.println("Data not found!");
+            } catch (Exception exception) {
+                System.out.println("Something went wrong!");
             }
         } while (!Command.EXIT.getName().equalsIgnoreCase(input));
         sc.close();
