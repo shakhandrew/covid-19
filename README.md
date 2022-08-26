@@ -3,12 +3,12 @@ https://github.com/M-Media-Group/Covid-19-API.
 The program request the user to input a country name. 
 Once the user provides the country name, the application displays the information regarding cases: 
 
-o confirmed 
+- confirmed 
 
-o recovered 
+- recovered 
 
-o deaths 
+- deaths 
 
-o vaccinated level in % of total population
+- vaccinated level in % of total population
 
-o new confirmed cases since last data available 
+- new confirmed cases since last data available 
